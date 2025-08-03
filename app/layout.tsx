@@ -1,5 +1,5 @@
 // app/layout.tsx
-
+import { Analytics } from "@vercel/analytics/next"
 import "./css/style.css";
 
 import { Inter } from "next/font/google";

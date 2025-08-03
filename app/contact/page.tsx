@@ -1,5 +1,7 @@
 "use client";
 import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { Mail, Phone, Building, User } from "lucide-react";
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -12,109 +14,206 @@ const ContactPage = () => {
 
   const [submitted, setSubmitted] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // Check if all fields are filled
     const allFilled = Object.values(formData).every((val) => val.trim() !== "");
     if (!allFilled) {
       alert("Please fill in all fields before submitting.");
       return;
     }
-
-    // Simulate form submission
     setSubmitted(true);
   };
 
   return (
-    <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-      <h1 className="text-4xl font-bold text-black mb-10">Contact Me</h1>
+    <section className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-20 px-4 sm:px-8">
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="max-w-6xl mx-auto"
+      >
+        <h1 className="text-5xl font-bold text-center mb-16 text-gray-900">
+          Let’s work together
+        </h1>
 
-      {submitted ? (
-        <div className="p-6 rounded-2xl bg-green-100 text-green-800 shadow-md text-center">
-          <h2 className="text-2xl font-semibold">Thank you! 🙌</h2>
-          <p className="mt-2">I’ve received your message and will get back to you shortly.</p>
+        <div className="grid md:grid-cols-2 gap-12 items-start">
+          {/* Contact Info */}
+          <div className="space-y-8">
+            <p className="text-lg text-gray-600 leading-relaxed">
+              Whether you have an idea, a project, or just want to say hello —
+              feel free to drop me a message. I’m always open to meaningful
+              conversations and collaborations.
+            </p>
+
+            <div className="space-y-4 text-gray-700">
+              <div className="flex items-center gap-3">
+                <Mail className="w-5 h-5" />
+                <span>yourname@email.com</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Phone className="w-5 h-5" />
+                <span>+91 98765 43210</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Building className="w-5 h-5" />
+                <span>India / Remote</span>
+              </div>
+            </div>
+
+            <div className="mt-10">
+              <h3 className="text-xl font-semibold mb-3">What others say:</h3>
+              <div className="space-y-4">
+                <blockquote className="bg-white border-l-4 border-black p-4 shadow-md rounded-xl">
+                  <p className="text-sm text-gray-800">
+                    “Incredibly creative and professional — it was a pleasure
+                    working with you!”
+                  </p>
+                  <span className="text-xs text-gray-500 block mt-1">
+                    – Previous Client
+                  </span>
+                </blockquote>
+
+                <blockquote className="bg-white border-l-4 border-black p-4 shadow-md rounded-xl">
+                  <p className="text-sm text-gray-800">
+                    “Clear communication, fast delivery, and thoughtful
+                    solutions. Highly recommended.”
+                  </p>
+                  <span className="text-xs text-gray-500 block mt-1">
+                    – Collaborator
+                  </span>
+                </blockquote>
+              </div>
+            </div>
+          </div>
+
+          {/* Contact Form */}
+          <div className="bg-white p-8 shadow-xl rounded-2xl">
+            {submitted ? (
+              <div className="text-center text-green-700 space-y-3">
+                <h2 className="text-2xl font-semibold">Thank you! 🙌</h2>
+                <p>I’ll get back to you as soon as possible.</p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <InputField
+                  label="Full Name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  icon={<User className="w-4 h-4 text-gray-500" />}
+                />
+                <InputField
+                  label="Email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  icon={<Mail className="w-4 h-4 text-gray-500" />}
+                />
+                <InputField
+                  label="Company"
+                  name="company"
+                  value={formData.company}
+                  onChange={handleChange}
+                  icon={<Building className="w-4 h-4 text-gray-500" />}
+                />
+                <InputField
+                  label="Phone"
+                  name="phone"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  icon={<Phone className="w-4 h-4 text-gray-500" />}
+                />
+                <div>
+                  <label className="block mb-1 text-sm font-medium text-gray-700">
+                    Message
+                  </label>
+                  <textarea
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    rows={5}
+                    placeholder="What would you like to discuss?"
+                    className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-sm"
+                    required
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full bg-black text-white py-3 rounded-xl font-medium hover:bg-gray-900 transition-all"
+                >
+                  Send Message
+                </button>
+              </form>
+            )}
+          </div>
         </div>
-      ) : (
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-6 bg-white p-8 rounded-2xl shadow-md"
-        >
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black"
-              required
-            />
-          </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Company Name</label>
-            <input
-              type="text"
-              name="company"
-              value={formData.company}
-              onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-            <input
-              type="tel"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Your Message</label>
-            <textarea
-              name="message"
-              value={formData.message}
-              onChange={handleChange}
-              rows={5}
-              className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black"
-              required
-            ></textarea>
-          </div>
-
-          <button
-            type="submit"
-            className="w-full py-3 mt-4 bg-black text-white font-semibold rounded-xl hover:bg-gray-900 transition"
+        {/* Call to Action */}
+        <div className="text-center mt-24">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            Want to collaborate or just chat?
+          </h2>
+          <a
+            href="mailto:yourname@email.com"
+            className="inline-block bg-black text-white px-6 py-3 rounded-full hover:bg-gray-900 transition-all text-sm font-medium"
           >
-            Submit
-          </button>
-        </form>
-      )}
+            Drop me an email
+          </a>
+        </div>
+      </motion.div>
     </section>
   );
 };
+
+const InputField = ({
+  label,
+  name,
+  value,
+  onChange,
+  type = "text",
+  icon,
+}: {
+  label: string;
+  name: string;
+  value: string;
+  onChange: any;
+  type?: string;
+  icon?: React.ReactNode;
+}) => (
+  <div className="relative">
+    <label
+      htmlFor={name}
+      className="block mb-1 text-sm font-medium text-gray-700"
+    >
+      {label}
+    </label>
+    <div className="relative">
+      {icon && (
+        <span className="absolute inset-y-0 left-3 flex items-center">
+          {icon}
+        </span>
+      )}
+      <input
+        type={type}
+        id={name}
+        name={name}
+        value={value}
+        onChange={onChange}
+        required
+        className={`w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-sm`}
+      />
+    </div>
+  </div>
+);
 
 export default ContactPage;
