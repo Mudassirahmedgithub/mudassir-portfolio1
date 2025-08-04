@@ -9,14 +9,17 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { name, email, company, phone, message } = body;
 
+    console.log("📩 Contact API Triggered:", body);
+
     if (!name || !email || !company || !phone || !message) {
+      console.warn("⚠️ Missing required fields.");
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
-    // Send email via Resend
-    await resend.emails.send({
-      from: "Your Name <onboarding@resend.dev>",
-      to: ["yourname@email.com"],
+    console.log("🚀 Sending email via Resend...");
+    const emailRes = await resend.emails.send({
+      from: "Mudassir Ahmed <onboarding@resend.dev>",
+      to: ["mudassirahmed915171@gmail.com"],
       subject: "New Contact Message",
       html: `
         <h2>New Contact Submission</h2>
@@ -27,11 +30,11 @@ export async function POST(req: NextRequest) {
         <p><strong>Message:</strong> ${message}</p>
       `,
     });
+    console.log("✅ Resend email sent:", emailRes?.id || "no id returned");
 
-    // Append to Google Sheet
     const auth = new google.auth.GoogleAuth({
       credentials: {
-        client_email: process.env.GOOGLE_CLIENT_EMAIL,
+        client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
         private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
       },
       scopes: ["https://www.googleapis.com/auth/spreadsheets"],
@@ -40,7 +43,8 @@ export async function POST(req: NextRequest) {
     const sheets = google.sheets({ version: "v4", auth });
     const spreadsheetId = process.env.GOOGLE_SHEET_ID!;
 
-    await sheets.spreadsheets.values.append({
+    console.log("🧾 Appending to Google Sheet...");
+    const appendRes = await sheets.spreadsheets.values.append({
       spreadsheetId,
       range: "Sheet1!A:F",
       valueInputOption: "USER_ENTERED",
@@ -48,10 +52,14 @@ export async function POST(req: NextRequest) {
         values: [[new Date().toISOString(), name, email, company, phone, message]],
       },
     });
+    console.log("✅ Google Sheet updated:", appendRes.statusText);
 
     return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("API Contact Error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  } catch (error: any) {
+    console.error("❌ API Contact Error:", error.message || error);
+    return NextResponse.json(
+      { error: "Internal server error", detail: error.message || error },
+      { status: 500 }
+    );
   }
 }

@@ -13,6 +13,7 @@ const ContactPage = () => {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -21,15 +22,43 @@ const ContactPage = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const allFilled = Object.values(formData).every((val) => val.trim() !== "");
-    if (!allFilled) {
-      alert("Please fill in all fields before submitting.");
-      return;
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  const allFilled = Object.values(formData).every((val) => val.trim() !== "");
+  if (!allFilled) {
+    alert("Please fill in all fields before submitting.");
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    const res = await fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+
+    const data = await res.json(); // always parse response
+
+    if (!res.ok) {
+      console.error("❌ API Error Response:", data);
+      alert("Error: " + (data?.error || "Something went wrong."));
+    } else if (!data.success) {
+      console.error("⚠️ API Success=false:", data);
+      alert("Server did not complete the action.");
+    } else {
+      console.log("✅ API Success:", data);
+      setSubmitted(true);
     }
-    setSubmitted(true);
-  };
+  } catch (err: any) {
+    console.error("❌ Frontend Exception:", err);
+    alert("Something went wrong. Please try again later.");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <section className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-20 px-4 sm:px-8">
@@ -44,7 +73,6 @@ const ContactPage = () => {
         </h1>
 
         <div className="grid md:grid-cols-2 gap-12 items-start">
-          {/* Contact Info */}
           <div className="space-y-8">
             <p className="text-lg text-gray-600 leading-relaxed">
               Whether you have an idea, a project, or just want to say hello —
@@ -93,7 +121,6 @@ const ContactPage = () => {
             </div>
           </div>
 
-          {/* Contact Form */}
           <div className="bg-white p-8 shadow-xl rounded-2xl">
             {submitted ? (
               <div className="text-center text-green-700 space-y-3">
@@ -149,16 +176,16 @@ const ContactPage = () => {
 
                 <button
                   type="submit"
-                  className="w-full bg-black text-white py-3 rounded-xl font-medium hover:bg-gray-900 transition-all"
+                  disabled={loading}
+                  className="w-full bg-black text-white py-3 rounded-xl font-medium hover:bg-gray-900 transition-all disabled:opacity-50"
                 >
-                  Send Message
+                  {loading ? "Sending..." : "Send Message"}
                 </button>
               </form>
             )}
           </div>
         </div>
 
-        {/* Call to Action */}
         <div className="text-center mt-24">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">
             Want to collaborate or just chat?
