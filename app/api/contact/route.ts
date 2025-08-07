@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
         <p><strong>Message:</strong> ${message}</p>
       `,
     });
-    console.log("✅ Resend email sent:", emailRes?.id || "no id returned");
+    console.log("✅ Resend email sent:", emailRes?.data?.id || "no id returned");
 
     const auth = new google.auth.GoogleAuth({
       credentials: {
