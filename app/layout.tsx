@@ -1,6 +1,6 @@
 // app/layout.tsx
-import { Analytics } from "@vercel/analytics/next"
 import "./css/style.css";
+import { Analytics } from "@vercel/analytics/next";
 
 import { Inter } from "next/font/google";
 import localFont from "next/font/local";
@@ -52,18 +52,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body
-        className={`${inter.variable} ${nacelle.variable} bg-white text-black font-inter text-base antialiased`}
-      >
+    <html lang="en" className={`${inter.variable} ${nacelle.variable}`}>
+      <head>
+        {/* ✅ Required for responsive layout */}
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body className="bg-white text-black font-inter text-base antialiased">
         <Header />
 
-        <main className="pt-16 pb-20 min-h-screen flex flex-col">
-          {/* Padding top and bottom to avoid overlapping fixed header/footer */}
+        <main className="flex flex-col min-h-screen pt-16 pb-20">
           <div className="flex-grow">{children}</div>
         </main>
 
         <Footer />
+        <Analytics />
       </body>
     </html>
   );
