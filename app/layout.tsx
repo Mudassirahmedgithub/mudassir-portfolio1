@@ -16,26 +16,10 @@ const inter = Inter({
 
 const nacelle = localFont({
   src: [
-    {
-      path: "../public/fonts/nacelle-regular.woff2",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "../public/fonts/nacelle-italic.woff2",
-      weight: "400",
-      style: "italic",
-    },
-    {
-      path: "../public/fonts/nacelle-semibold.woff2",
-      weight: "600",
-      style: "normal",
-    },
-    {
-      path: "../public/fonts/nacelle-semibolditalic.woff2",
-      weight: "600",
-      style: "italic",
-    },
+    { path: "../public/fonts/nacelle-regular.woff2", weight: "400", style: "normal" },
+    { path: "../public/fonts/nacelle-italic.woff2", weight: "400", style: "italic" },
+    { path: "../public/fonts/nacelle-semibold.woff2", weight: "600", style: "normal" },
+    { path: "../public/fonts/nacelle-semibolditalic.woff2", weight: "600", style: "italic" },
   ],
   variable: "--font-nacelle",
   display: "swap",
@@ -52,18 +36,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${nacelle.variable}`}>
+    <html lang="en" className={`h-full ${inter.variable} ${nacelle.variable}`}>
       <head>
-        {/* ✅ Required for responsive layout */}
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-      <body className="bg-white text-black font-inter text-base antialiased">
+      <body className="min-h-screen flex flex-col bg-white text-black font-inter text-base antialiased overflow-x-hidden">
         <Header />
-
-        <main className="flex flex-col min-h-screen pt-16 pb-20">
-          <div className="flex-grow">{children}</div>
-        </main>
-
+        <main className="flex-grow w-full">{children}</main>
         <Footer />
         <Analytics />
       </body>
