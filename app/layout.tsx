@@ -43,7 +43,7 @@ export default function RootLayout({
           content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
         />
       </head>
-      <body className="min-h-screen flex flex-col bg-white text-black font-inter text-base antialiased overflow-x-hidden">
+      <body className="min-h-[100dvh] flex flex-col bg-white text-black font-inter text-base antialiased overflow-x-hidden">
         <Header />
         <main className="flex-grow w-full">
           {children}

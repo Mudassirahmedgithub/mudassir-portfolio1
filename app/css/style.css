@@ -7,6 +7,11 @@
    This @plugin syntax is non-standard and may not be recognized by your processor. */
 
 /* Define CSS custom properties and keyframes properly */
+/* Global height fix for footer scrolling issue */
+html, body {
+  min-height: 100%;
+  min-height: 100dvh; /* modern browsers */
+}
 
 :root {
   --font-inter: var(--font-inter), sans-serif;
