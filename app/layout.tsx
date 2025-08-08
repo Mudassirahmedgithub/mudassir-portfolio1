@@ -38,12 +38,16 @@ export default function RootLayout({
   return (
     <html lang="en" className={`h-full ${inter.variable} ${nacelle.variable}`}>
       <head>
-        {/* The viewport meta tag should ideally be inside the next/head of pages/layout but keeping here as provided */}
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
+        />
       </head>
-      <body className="h-screen flex flex-col bg-white text-black font-inter text-base antialiased overflow-x-hidden">
+      <body className="min-h-screen flex flex-col bg-white text-black font-inter text-base antialiased overflow-x-hidden">
         <Header />
-        <main className="flex-grow overflow-auto w-full">{children}</main>
+        <main className="flex-grow w-full">
+          {children}
+        </main>
         <Footer />
         <Analytics />
       </body>
