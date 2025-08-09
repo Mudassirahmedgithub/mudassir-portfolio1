@@ -143,11 +143,13 @@ const ProjectsPage = () => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setVisibleProjects(
-              (prev) => new Set(prev).add(entry.target.dataset.projectId || "")
-            );
-          }
+       if (entry.isIntersecting) {
+        const target = entry.target as HTMLElement; // cast to HTMLElement
+        setVisibleProjects((prev) => 
+          new Set(prev).add(target.dataset.projectId || "")
+        );
+      }
+
         });
       },
       { threshold: 0.1 }
